@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
 import noise
-import imageio
+import png
 import time
 
 
@@ -68,7 +68,7 @@ def run_plot_save(net, size_x, size_y, fig_size=8):
 
 resolution = 720
 aspect_ratio = 16 / 9
-n_frames = 1000
+n_frames = 30 * 34
 fps = 30
 num_neurons = 32
 num_layers = 8
@@ -80,27 +80,23 @@ net = NN(num_neurons=num_neurons)
 net.apply(init_normal)
 perlin = [[[noise.pnoise3(i / (jitter_factor * n_frames), j / num_neurons, k / num_layers, base=j, repeatx=int(1 / jitter_factor), octaves=2) * noise_scale for i in range(n_frames)] for j in range(num_neurons)] for k in range(num_layers)]
 
-with imageio.get_writer('out.gif', mode='I', fps=fps) as writer:
-    for i in range(n_frames):
-        start = time.time()
-        print(i)
-        for j in range(len(perlin)):
-            for k in range(2, num_layers):
-                net.state_dict()['layers.{}.weight'.format((k + 1) * 2)][0][j] = perlin[k][j][i]
+for i in range(n_frames):
+    start = time.time()
+    print('frame {}/{}'.format(i + 1, n_frames))
+    for j in range(len(perlin)):
+        for k in range(2, num_layers):
+            net.state_dict()['layers.{}.weight'.format((k + 1) * 2)][0][j] = perlin[k][j][i]
 
-        colors = run_net(net, resolution, int(aspect_ratio * resolution))
+    colors = run_net(net, resolution, int(aspect_ratio * resolution))
 
-        grayscale = colors.mean(axis=-1, keepdims=1)
-        max_index = np.where(grayscale == grayscale.max())
-        colors[max_index[0][0]][max_index[1][0]] = 1
-        min_index = np.where(grayscale == grayscale.min())
-        colors[min_index[0][0]][min_index[1][0]] = 0
+    colors[0][0] = 1
+    colors[-1][-1] = 0
+    colors = (colors * 255).round().astype(np.uint8)
+    png.fromarray(colors, 'RGB').save('frames/out{}.png'.format(i))
 
-        writer.append_data(colors)
+    if plot:
+        plt.clf()
+        plt.imshow(colors)
+        plt.pause(0.0001)
 
-        if plot:
-            plt.clf()
-            plt.imshow(colors)
-            plt.pause(0.0001)
-
-        print(time.time() - start)
+    print('Done in {}s'.format(round(time.time() - start, 1)))
