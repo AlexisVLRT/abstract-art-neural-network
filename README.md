@@ -9,13 +9,9 @@ Requires following packages:
 
 ## Example art
 
-![art 1](https://giant.gfycat.com/WhiteWastefulDamselfly.webm)
+![art 1](https://thumbs.gfycat.com/WhiteWastefulDamselfly-size_restricted.gif)
 
 ![art 2](https://cdn-images-1.medium.com/max/800/1*lwNsGQZpGf-m6vUmku68CQ.png)
-
-![art 3](https://cdn-images-1.medium.com/max/800/1*HWvXPk8GU35sxJGcimdk5w.png)
-
-![asrt 4](https://cdn-images-1.medium.com/max/800/1*f8j5FgSTjpImJqVt5JdNQA.png)
 
 Made by [@paraschopra](https://twitter.com/paraschopra)
 
